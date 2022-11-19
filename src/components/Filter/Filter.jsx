@@ -1,7 +1,13 @@
-import PropTypes from 'prop-types';
 import css from 'components/ContactForm/ContactForm.module.css';
+import { performFilter } from 'Redux/FilterSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
-export const Filter = ({ hendleFilter, filter }) => {
+export const Filter = () => {
+  const dispatch = useDispatch();
+  const filter = useSelector(state => state.filter);
+  const hendleFilter = e => {
+    dispatch(performFilter(e.currentTarget.value));
+  };
   return (
     <div>
       <h3>Find contacts by name</h3>
@@ -13,9 +19,4 @@ export const Filter = ({ hendleFilter, filter }) => {
       ></input>
     </div>
   );
-};
-
-Filter.propTypes = {
-  hendleFilter: PropTypes.func.isRequired,
-  filter: PropTypes.string.isRequired,
 };

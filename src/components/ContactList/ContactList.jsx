@@ -1,10 +1,18 @@
-import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid/non-secure';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from 'Redux/ContactSlice';
+import PropTypes from 'prop-types';
 import css from 'components/ContactList/ContactList.module.css';
 
-export const ContactList = ({ contacts, deleteById }) => {
+export const ContactList = ({ contacts }) => {
+  const dispatch = useDispatch();
+  const filter = useSelector(state => state.filter);
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
   const createMarcup = () => {
-    return contacts.map(contact => {
+    return filteredContacts.map(contact => {
       return (
         <li key={nanoid()} id={contact.id}>
           <span
@@ -13,7 +21,7 @@ export const ContactList = ({ contacts, deleteById }) => {
           <button
             className={css.deleted_button}
             data-id={contact.id}
-            onClick={() => deleteById(contact.id)}
+            onClick={() => dispatch(deleteContact(contact.id))}
           >
             Delete
           </button>
@@ -27,5 +35,4 @@ export const ContactList = ({ contacts, deleteById }) => {
 
 ContactList.propTypes = {
   contacts: PropTypes.array.isRequired,
-  deleteById: PropTypes.func.isRequired,
 };

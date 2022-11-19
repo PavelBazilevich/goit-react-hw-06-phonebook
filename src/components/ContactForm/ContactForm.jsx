@@ -1,7 +1,7 @@
 import { useState } from 'react';
+import { nanoid } from 'nanoid/non-secure';
 import PropTypes from 'prop-types';
 import css from 'components/ContactForm/ContactForm.module.css';
-import { nanoid } from 'nanoid/non-secure';
 
 export const ContactForm = ({ onSubmitData }) => {
   const [name, setName] = useState('');
