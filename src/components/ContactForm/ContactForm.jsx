@@ -1,11 +1,26 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid/non-secure';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'Redux/ContactSlice';
+import { contactsFromRedux } from 'Redux/Selector';
 import css from 'components/ContactForm/ContactForm.module.css';
 
-export const ContactForm = ({ onSubmitData }) => {
+export const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+  const contacts = useSelector(contactsFromRedux);
+
+  const repeatControlData = data => {
+    const savedNameArray = contacts.map(({ name }) => name.toLowerCase());
+
+    if (savedNameArray.includes(data.name.toLowerCase())) {
+      alert(' Контакт вже є у телефонній книзі!');
+      return;
+    }
+    return dispatch(addContact(data.name, data.number));
+  };
 
   const hendleChenge = event => {
     const { name, value } = event.currentTarget;
@@ -24,7 +39,7 @@ export const ContactForm = ({ onSubmitData }) => {
   const hendleSubmit = event => {
     event.preventDefault();
     const id = nanoid();
-    onSubmitData({ name, number, id });
+    repeatControlData({ name, number, id });
     // reset
     setName('');
     setNumber('');
@@ -65,7 +80,4 @@ export const ContactForm = ({ onSubmitData }) => {
       </form>
     </div>
   );
-};
-ContactForm.propTypes = {
-  onSubmitData: PropTypes.func.isRequired,
 };
